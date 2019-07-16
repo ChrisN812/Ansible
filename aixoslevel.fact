@@ -1,5 +1,11 @@
 #!/bin/sh
-## OSLEVEL fact for AIX to query oslevel info
+########################################################################################
+##  OSLEVEL fact for AIX to query oslevel info
+##  Returns 5 variables which can be using in playbook for oslevel dependant controls
+##  Copy this to /etc/ansible/facts.d/aixoslevel.fact
+##  chmod 555 /etc/ansible/facts.d/aixoslevel.fact
+########################################################################################
+
 OSLEVEL=`oslevel -s`
 RELEASE=`oslevel -s | awk -F - '{print $1}'`
 TECHLVL=`oslevel -s | awk -F - '{print $2}'`
