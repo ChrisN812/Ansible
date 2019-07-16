@@ -1,1 +1,13 @@
+#!/bin/sh
+## OSLEVEL fact for AIX to query oslevel info
+OSLEVEL=`oslevel -s`
+RELEASE=`oslevel -s | awk -F - '{print $1}'`
+TECHLVL=`oslevel -s | awk -F - '{print $2}'`
+SERVPAK=`oslevel -s | awk -F - '{print $3}'`
+RELDATE=`oslevel -s | awk -F - '{print $4}'`
+echo "{\"oslevel\" : \"${OSLEVEL}\","
+echo "\"release\" : \"${RELEASE}\","
+echo "\"technology_level\" : \"${TECHLVL}\","
+echo "\"service_pack\" : \"${SERVPAK}\","
+echo "\"release_date\" : \"${RELDATE}\"}"
 
