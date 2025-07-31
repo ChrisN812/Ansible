@@ -1,0 +1,6 @@
+[influxdb]
+name = InfluxDB Repository - RHEL {{ ansible_facts['distribution_major_version'] }}
+baseurl = https://repos.influxdata.com/rhel/{{ ansible_facts['distribution_major_version'] }}/x86_64/stable
+enabled = 1
+gpgcheck = 1
+gpgkey = https://repos.influxdata.com/influxdb.key

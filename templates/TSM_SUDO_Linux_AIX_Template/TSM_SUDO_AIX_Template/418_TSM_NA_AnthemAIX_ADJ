@@ -1,0 +1,49 @@
+# Begin  Anthem-AIX TSM standard template Ver 1.1 Date 2017-11-14  * Master * Refer  NA17318014 Begin #
+# Description :
+# Software products and versions : TSM
+# Supported OS platforms : AIX
+#
+# Version control
+# V1.1 -  moharaj1@in.ibm.com 
+#
+# 
+# <:NA notes- ensure you keep it a
+#      'pure' unix text file, otherwise it may not work right when #included.
+#      Recommend use of VIM to edit:  https://ibm.biz/NAsudoVim
+#
+#=====================================================================================
+# 
+# -----Do not change anything below this line, excepting to replace ----------
+# -----         <:path *> content with local pathing.       ------------------
+#
+
+Cmnd_Alias IBM_TSM_BAU_ADJ_CMDS = \
+	  /usr/bin/smitty sysback, \
+          sudoedit /usr/tivoli/tsm/client/ba/bin*/inclexcl, \
+          sudoedit /usr/tivoli/tsm/client/api/bin*/inclexcl
+
+# Assigned To group from NA or GLB template
+IBM_TSM_BAU  TSM_HOSTS = IBM_TSM_BAU_ADJ_CMDS			
+
+# Begin Anthem-AIX TSM  1.1  Date 2017-11-14  * Maintenance * Refer xxxxx Begin #
+
+# Available only during scheduled change/installation windows.
+
+Cmnd_Alias	IBM_TSM_ADM_ADJ_CMDS = \
+          /tsmcode/*/install.sh -c, \
+	  /tsmcode/*/install.sh, \
+	  /usr/sbin/mount -o ro\,bg\,soft inathmr002\:/software-depot/tsm /mnt, \
+	  /usr/sbin/umount /mnt, \
+	  /mnt/*/install.sh -c, \
+	  /mnt/*/install.sh
+  
+IBM_TSM_ADM  TSM_HOSTS = IBM_TSM_ADM_ADJ_CMDS
+Host_Alias	IBM_HLINK_HOSTS  = mom92puvtsm001, mom92puvtsm002, devel_rpt, hlinks80
+Cmnd_Alias	IBM_HLINK_TSM_BAU_ADJ_CMDS = \
+/usr/local/bin/new_dev_refresh_build_part2.shl, \
+/usr/local/bin/retrieve_s80_archives_part2
+IBM_TSM_BAU  IBM_HLINK_HOSTS = IBM_HLINK_TSM_BAU_ADJ_CMDS
+
+# End Anthem-AIX TSM Ver 1.1 Date 2017-11-14 * Maintenance * Refer xxxxx End #
+
+# End  Anthem-AIX TSM standard template Ver 1.1 Date 2017-11-14 * Master * Refer  NA17318014 End #

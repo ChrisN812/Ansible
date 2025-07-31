@@ -1,0 +1,7 @@
+OUTPUT=ISO
+OUTPUT_URL=nfs://admin/share/linux
+BACKUP=NETFS
+BACKUP_URL=nfs://admin/share/linux
+BACKUP_PROG_EXCLUDE=("${BACKUP_PROG_EXCLUDE[@]}" '/media' '/var/tmp' '/var/crash' '/var/cache' '/opt/fireeye' '/opt/Symantec' '/opt/Tanium')
+NETFS_KEEP_OLD_BACKUP_COPY=
+

@@ -1,0 +1,11 @@
+# CBH AIX /etc/sudoers file.
+# 2025-02-05 - ca_cnadmin - File had many errors / issues, removed 'users' and moved to group control
+
+## THIS must remain:
+root    ALL=(ALL) ALL
+
+Defaults logfile=/var/log/sudo.log
+wasadmin ALL=(ALL) /bin/su - wasadmin
+
+# Allow members of adm group full sudo access (Kyndryl and CBH admins)
+%adm ALL=(ALL) ALL

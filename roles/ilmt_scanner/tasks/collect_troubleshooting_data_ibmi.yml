@@ -1,0 +1,86 @@
+---
+- name: "Verify scanner installation on IBM i endpoints"
+  include_role:
+    name: ilmt_scanner
+    tasks_from: verify_scanner_installation
+
+- name: "Read endpoint id value on IBM i endpoints"
+  shell: "cat \"{{ lmt_scanner_path_ibmi }}/config/endpoint_id.txt\" | tr ':' '-'"
+  register: ibmi_endpoint_id
+  changed_when: false
+
+- name: "Run collect troubleshooting data script on IBM i endpoints"
+  command: "qsh collect_support_data.sh"
+  args:
+    chdir: "{{ lmt_scanner_path_ibmi }}"
+
+- name: Get files in folder support_data
+  find:
+    paths: "{{ lmt_scanner_path_ibmi }}/support_data"
+  register: found_support_data
+
+- name: Get latest troubleshooting file
+  set_fact:
+    latest_support_file: "{{ (found_support_data.files | sort(attribute='mtime') | last).path }}"
+
+- name: "Remove troubleshooting data archive from IBM i endpoints"
+  file:
+    state: absent
+    path: "{{ lmt_scanner_path_ibmi }}/{{ ansible_host }}_{{ ibmi_endpoint_id.stdout }}.zip"
+
+- name: "Save useful ansible_facts to ansible_facts.txt file on IBM i endpoints"
+  copy:
+    content: "{\n
+              ansible_facts['hostname']: {{ ansible_facts['hostname'] | default('') | to_nice_json }}\n
+              ansible_facts['domain']: {{ ansible_facts['domain'] | default('') | to_nice_json }}\n
+              ansible_facts['fqdn']: {{ ansible_facts['fqdn'] | default('') | to_nice_json }}\n
+              ansible_facts['user_id'] {{ ansible_facts['user_id'] | default('') | to_nice_json }}\n
+              ansible_facts['user_dir']: {{ ansible_facts['user_dir'] | default('') | to_nice_json }}\n
+              ansible_facts['user_shell']: {{ ansible_facts['user_shell'] | default('') | to_nice_json }}\n
+              ansible_facts['architecture']: {{ ansible_facts['architecture'] | default('') | to_nice_json }}\n
+              ansible_facts['system']: {{ ansible_facts['system'] | default('') | to_nice_json }}\n
+              ansible_facts['os_family']: {{ ansible_facts['os_family'] | default('') | to_nice_json }}\n
+              ansible_facts['distribution']: {{ ansible_facts['distribution'] | default('') | to_nice_json }}\n
+              ansible_facts['distribution_major_version']: {{ ansible_facts['distribution_major_version'] | default('') | to_nice_json }}\n
+              ansible_facts['distribution_version']: {{ ansible_facts['distribution_version'] | default('') | to_nice_json }}\n
+              ansible_facts['distribution_release']: {{ ansible_facts['distribution_release'] | default('') | to_nice_json }}\n
+              ansible_facts['kernel']: {{ ansible_facts['kernel'] | default('') | to_nice_json }}\n
+              ansible_facts['machine_id']: {{ ansible_facts['machine_id'] | default('') | to_nice_json }}\n
+              ansible_facts['env']: {{ ansible_facts['env'] | default('') | to_nice_json }}\n
+              ansible_facts['python_version']: {{ ansible_facts['python_version'] | default('') | to_nice_json }}\n
+              ansible_facts['python']: {{ ansible_facts['python'] | default('') | to_nice_json }}\n
+              ansible_facts['selinux']: {{ ansible_facts['selinux'] | default('') | to_nice_json }}\n
+              }\n"
+    dest: "{{ lmt_scanner_path_ibmi }}/ansible_facts.txt"
+    force: true
+    owner: "{{ ansible_user if ( ansible_user is defined ) else ansible_facts['user_id'] }}"
+    mode: '0644'
+
+- name: "Create troubleshooting data archive on IBM i endpoints"
+  community.general.archive:
+    path:
+      - "{{ lmt_scanner_path_ibmi }}/ansible_facts.txt"
+      - "{{ latest_support_file }}"
+    dest: "{{ lmt_scanner_path_ibmi }}/{{ ansible_host }}_{{ ibmi_endpoint_id.stdout }}.zip"
+    format: zip
+    force_archive: true
+  register: archive
+
+- name: "Remove troubleshooting data collected by script from IBM i endpoints"
+  file:
+    state: absent
+    path: "{{ latest_support_file }}"
+  when: archive is succeeded
+
+- name: "Fetch troubleshooting data archive from IBM i endpoints"
+  fetch:
+    src: "{{ lmt_scanner_path_ibmi }}/{{ ansible_host }}_{{ ibmi_endpoint_id.stdout }}.zip"
+    dest: "{{ lmt_local_file_storage_path }}/{{ lmt_troubleshooting_data_folder }}/"
+    flat: true
+  register: fetched_files
+
+- name: "Remove troubleshooting data archive from IBM i endpoints"
+  file:
+    state: absent
+    path: "{{ lmt_scanner_path_ibmi }}/{{ ansible_host }}_{{ ibmi_endpoint_id.stdout }}.zip"
+  when: fetched_files is succeeded

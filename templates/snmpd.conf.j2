@@ -1,0 +1,23 @@
+rocommunity JNm1liwnp
+
+##      sec.name        source          community
+##      ========        ======          =========
+com2sec local           localhost       JNm1liwnp
+com2sec network_1       161.125.0.0/16  JNm1liwnp
+
+##      Access.group.name       sec.model       sec.name
+##      =================       =========       ========
+group   MyROGroup_1             v1              local
+group   MyROGroup_1             v2c             network_1
+
+##      MIB.view.name   incl/excl       MIB.subtree     mask
+##      =============   =========       ===========     ====
+view    all-mibs        included        .1              80
+
+## MIB
+##      group.name  context sec.model sec.level prefix read     write notif
+##      ==========  ======= ========= ========= ====== ====     ===== =====
+access  MyROGroup_1 ""      v1        noauth    exact  all-mibs none  none
+access  MyROGroup_1 ""      v2c       noauth    exact  all-mibs none  none
+
+dontLogTCPWrappersConnects yes

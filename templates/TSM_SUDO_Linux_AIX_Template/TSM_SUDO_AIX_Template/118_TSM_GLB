@@ -1,0 +1,271 @@
+# Begin  Global TSM standard template Ver 1.6.9  Date 2015-10-06  * Master * Refer NA15307046  Begin #
+# Description
+# Software products and versions
+# Supported OS platforms
+# local functional ID
+# local path changes
+# local OS groups for the Master
+# self serve access permitted for all sub templates except Special for groups ABC, DEF and MNO only
+#
+#=====================================================================================
+# NOTE this version requires sudoers.sampleconfig.V8.4 or newer which
+# 		can be located from: http://ibm.biz/GsudoStandardAlias 
+#=====================================================================================
+#
+# Version control
+#
+# See changelog on Global sudo wiki https://ibm.biz/ChlogMiddlewareTemplates for previous changes
+#
+# Updates in this version:
+#
+# v1.6.9 - tomasz.zaborowski@pl.ibm.com - Functional update - add command used during new instance configuration step
+#  #db2icrt - manual configuration
+#  #dsmicfgx - configuration wizard
+#
+# +			/usr/opt/tivoli/tsm/server/bin/dsmicfgx, \
+# +			/usr/tivoli/tsm/db2/instance/db2icrt, \
+#
+# V1.6.8 - jekri@dk.ibm.com - Functional update - change path for inittab commands
+#
+# +			/usr/sbin/chitab, \
+# +			/usr/sbin/mkitab, \
+# +			/usr/sbin/rmitab, \
+# -			/usr/bin/chitab, \
+# -			/usr/bin/mkitab, \
+# -			/usr/bin/rmitab, \
+#          
+#===========================================================================
+#
+# Replace sample group names with real group names for your account
+# 
+User_Alias      IBM_TSM_BAU = %tsmadmin
+#
+# use a different group for maintenance windows, so all we need to do is add/remove folks from group:
+#
+User_Alias      IBM_TSM_ADM = %tsmadmin
+
+Host_Alias	TSM_HOSTS = ALL # in this case, we want this defined on all hosts, indicate subsets as appropriate.
+#
+# All user Ids that a team needs to su - to need to have secondary logging #enabled by the BUR team.  
+# Reference the sudo wiki for instructions on enabling secondary logging.  https://ibm.biz/Gsudo2log
+#
+#
+Cmnd_Alias	IBM_TSM_C_BAU_CMDS = \	
+			/usr/tivoli/tsm/client/ba/bin/dsmc, \
+			/usr/tivoli/tsm/client/ba/bin/dsmcad, \
+			/usr/tivoli/tsm/client/ba/bin/dsmtrace, \
+                        /usr/tivoli/tsm/client/ba/bin/resched, \
+                        /usr/tivoli/tsm/client/ba/bin/init_sched.sh, \
+                        /usr/tivoli/tsm/client/ba/bin/dsmadmc, \
+			/usr/tivoli/tsm/client/ba/bin64/dsmc, \
+			/usr/tivoli/tsm/client/ba/bin64/dsmcad, \
+			/usr/tivoli/tsm/client/ba/bin64/dsmtrace, \
+                        /usr/tivoli/tsm/client/ba/bin64/resched, \
+                        /usr/tivoli/tsm/client/ba/bin64/init_sched.sh, \
+                        /usr/tivoli/tsm/client/ba/bin64/dsmadmc, \
+			/usr/tivoli/tsm/client/ba/bin64/dsmadmc, \
+                        /usr/tivoli/tsm/devices/bin/rc.acs_ssi, \
+                        /usr/tivoli/tsm/devices/bin/mttest, \
+                        /usr/tivoli/tsm/devices/bin/lbtest, \
+                        /usr/tivoli/tsm/devices/bin/tapeutil, \
+			/usr/tivoli/tsm/StorageAgent/bin/rc.tsmstgagnt,  \
+			/usr/tivoli/tsm/StorageAgent/bin/dsmsta, \
+                        /usr/tivoli/tsm/StorageAgent/bin/tsmsta,  \
+                        /usr/tivoli/tsm/StorageAgent/bin/dsmqsan,  \
+                        /usr/tivoli/tsm/StorageAgent/bin/tsmtrcfmt,  \
+                        /usr/tivoli/tsm/StorageAgent/bin/tsmdiag,  \
+			/usr/tivoli/tsm/tdp_r3/setup.sh, \
+                        /usr/tivoli/tsm/client/oracle/bin64/tdpoconf showenv,  \
+                        /usr/tivoli/tsm/client/oracle/sched/mysched.scr,  \
+                        /usr/tivoli/tsm/client/oracle/bin/tdpoconf, \
+                        /usr/tivoli/tsm/client/oracle/bin64/tdpoconf, \
+                        /usr/tivoli/tsm/client/oracle/bin/tdposync, \
+                        /usr/tivoli/tsm/client/oracle/bin64/tdposync, \
+                        /usr/tivoli/tsm/tdpesr3/oracle/setup.sh, \
+                        /usr/tivoli/tsm/client/hsm/bin/dsmattr, \
+                        /usr/tivoli/tsm/client/hsm/bin/dsmautomig, \
+                        /usr/tivoli/tsm/client/hsm/bin/dsmdf, \
+                        /usr/tivoli/tsm/client/hsm/bin/dsmdu, \
+                        /usr/tivoli/tsm/client/hsm/bin/dsmls, \
+                        /usr/tivoli/tsm/client/hsm/bin/dsmmigfs, \
+                        /usr/tivoli/tsm/client/hsm/bin/dsmmighelp, \
+                        /usr/tivoli/tsm/client/hsm/bin/dsmmigquery, \
+                        /usr/tivoli/tsm/client/hsm/bin/dsmmigrate, \
+                        /usr/tivoli/tsm/client/hsm/bin/dsmmigundelete, \
+                        /usr/tivoli/tsm/client/hsm/bin/dsmmode, \
+                        /usr/tivoli/tsm/client/hsm/bin/dsmmonitord, \
+                        /usr/tivoli/tsm/client/hsm/bin/dsmq, \
+                        /usr/tivoli/tsm/client/hsm/bin/dsmrecall, \
+                        /usr/tivoli/tsm/client/hsm/bin/dsmrecalld, \
+                        /usr/tivoli/tsm/client/hsm/bin/dsmreconcile, \
+                        /usr/tivoli/tsm/client/hsm/bin/dsmrm, \
+                        /usr/tivoli/tsm/client/hsm/bin/dsmrootd, \
+                        /usr/tivoli/tsm/client/hsm/bin/dsmscoutd, \
+                        /usr/tivoli/tsm/client/hsm/bin/dsmsetpw, \
+                        /usr/tivoli/tsm/client/hsm/bin/dsmsmj, \
+                        /usr/tivoli/tsm/client/hsm/bin/dsmagent, \
+                        /usr/tivoli/tsm/client/domino/bin/dsmadmc, \
+                        /usr/tivoli/tsm/client/domino/bin64/dsmadmc, \
+                        /usr/tivoli/tsm/client/domino/bin/dominstall, \
+                        /usr/tivoli/tsm/client/domino/bin64/dominstall, \
+                        /usr/tivoli/tsm/client/domino/bin/dsmdomp, \
+                        /usr/tivoli/tsm/client/domino/bin64/dsmdomp, \
+                        /usr/tivoli/tsm/client/domino/bin/dsmswitch, \
+                        /usr/tivoli/tsm/client/domino/bin64/dsmswitch, \
+                        /usr/tivoli/tsm/client/domino/bin/domsel.smp, \
+                        /usr/tivoli/tsm/client/domino/bin64/domsel.smp, \
+                        /usr/tivoli/tsm/client/domino/bin/dominc.smp, \
+                        /usr/tivoli/tsm/client/domino/bin64/dominc.smp, \
+                        /usr/tivoli/tsm/client/domino/bin/domina.smp, \
+                        /usr/tivoli/tsm/client/domino/bin64/domina.smp, \
+                        /usr/tivoli/tsm/client/domino/bin/domarc.smp, \
+                        /usr/tivoli/tsm/client/domino/bin64/domarc.smp, \
+			/usr/tivoli/tsm/client/domino/bin/domdsmc_notes1/dominstall, \
+			/usr/tivoli/tsm/client/domino/bin/domdsmc_notes1/domdsmc, \
+			/usr/tivoli/tsm/client/domino/bin/domdsmc_dp1/domdsmc, \
+			/usr/tivoli/tsm/client/domino/bin/domdsmc_dp1/dominstall, \
+			/usr/tivoli/tsm/server/bin/dsmadmc, \
+                        /usr/tivoli/tsm/server/bin/rc.adsmserv, \
+                        /usr/tivoli/tsm/server/bin/dsmserv, \
+                        /usr/tivoli/tsm/server/bin/adsmstart, \
+                        /usr/tivoli/tsm/server/bin/adsmstop, \
+                        /usr/tivoli/tsm/server/bin/dsm_rmv_itab autostart, \
+                        /usr/tivoli/tsm/server/bin/dsm_update_itab autotrace, \
+                        /usr/tivoli/tsm/server/bin/dsmulog, \
+                        /usr/tivoli/tsm/server/bin/register license, \
+                        /usr/tivoli/tsm/server/bin/dsmtrace, \
+                        /usr/tivoli/tsm/server/bin/dsmtca, \
+                        /usr/tivoli/tsm/server/bin/dsmswitch, \
+                        /usr/tivoli/tsm/server/bin/dsmj, \
+                        /usr/tivoli/tsm/server/bin/dsmfmt, \
+                        /usr/tivoli/tsm/server/bin/dsmlabel, \
+                        /usr/tivoli/tsm/server/bin/dsmlicense, \
+                        /usr/tivoli/tsm/server/bin/dsmtli.drv, \
+                        /usr/tivoli/tsm/server/bin/startserver, \
+                        /usr/tivoli/tsm/server/bin/stopserver, \
+                        /usr/tivoli/tsm/server/bin/export DSMSERV_DIR=/, \
+                        /usr/tivoli/tsm/server/bin/export DSMSERV_CONFIG=./dsmserv.opt, \
+                        /usr/tivoli/tsm/server/bin/export DSMSERV_DIR=/usr/tivoli/tsm/server/bin, \
+			/usr/tivoli/tsm/db2/adsm/dsmapipw, \
+			/usr/tivoli/tsm/tsmcops/tsmcops, \
+			/usr/tivoli/tsm/tsmcops/tsmcops.sh, \
+			/usr/opt/tivoli/tsm/server/bin/dsmicfgx, \
+			/usr/tivoli/tsm/db2/instance/db2icrt, \
+			sudoedit /tsmcode/tsmcops.cfg, \
+			/usr/tivoli/tsm/tdpws/tdpws, \
+			/usr/tivoli/tsm/tdpws/tdppasswd -p initwas.utl, \
+			/usr/tivoli/tsm/client/informix/bin/tdpipswd, \
+                        /usr/tivoli/tsm/client/informix/bin/txbsapswd, \
+			/etc/rc.tsm, \
+			/usr/bin/dsm, \
+			/usr/bin/dsmadmc, \
+			/usr/bin/dsmc, \
+			/usr/bin/dsmcad, \
+			/usr/bin/dsmfmt, \
+			/usr/bin/dsmlabel, \
+			/usr/bin/dsmlicense, \
+			/usr/bin/dsmserv, \
+			/usr/bin/dsmstat, \
+			/usr/bin/dsmtca, \
+			/bin/rm ./TSM.PWD, \
+			/bin/find, \
+ 			sudoedit /usr/tivoli/tsm/StorageAgent/bin/dsmsta.opt, \
+   			sudoedit /usr/tivoli/tsm/client/ba/bin*/dsm.sys, \
+   			sudoedit /usr/tivoli/tsm/client/ba/bin*/dsm.opt, \
+   			sudoedit /usr/tivoli/tsm/client/api/bin*/dsm.sys, \
+   			sudoedit /usr/tivoli/tsm/client/api/bin*/dsm.opt, \
+			sudoedit /usr/tivoli/tsm/client/ba/bin*/inclexcl.txt, \
+			/bin/chgrp tsmadm /sysadmin/tsm/scripts/*, \
+			/bin/chgrp additional_group /usr/tivoli/tsm/*, \
+			/bin/chown tsmadm /sysadmin/tsm/scripts/*, \
+			/bin/chown additional_user /usr/tivoli/tsm/*, \
+			/bin/chmod -R [0-7][0145][0145] /usr/tivoli/tsm/*, \
+			/bin/chmod -R [0-7][0145][0145] /opt/tivoli/tsm/*, \
+			/bin/chmod  [0-7][0145][0145] /usr/tivoli/tsm/*, \
+			/bin/chmod  [0-7][0145][0145] /opt/tivoli/tsm/*, \
+			/bin/rmdir  /usr/tivoli/tsm/*, \
+			/bin/rmdir  /opt/tivoli/tsm/*, \
+			/bin/mkdir  /usr/tivoli/tsm/*, \
+			/bin/mkdir  /opt/tivoli/tsm/*, \
+			/bin/touch  /usr/tivoli/tsm/*, \
+			/bin/touch  /opt/tivoli/tsm/*, \
+			/bin/rm /usr/tivoli/tsm/server/bin/adsmserv.lock, \
+			/bin/rm /usr/tivoli/tsm/StorageAgent/bin/adsmserv.lock, \
+			/bin/su - tsminst1, \
+			/bin/su - tsminst1 *, \
+			/usr/sbin/bootinfo, \
+			/usr/sbin/cfgmgr, \
+			/usr/sbin/lsvpcfg, \
+			/usr/sbin/lsvpd, \
+			/bin/ls, \
+			/usr/bin/tapeutil, \
+			/usr/bin/itdt, \
+			/bin/kill, \
+			/usr/bin/topas, \
+			/usr/bin/mtlib, \
+			/etc/lmcpd, \
+			/usr/sbin/snapshot, \
+        		/opt/fcms/bin/fcmsutil, \
+        		/usr/contrib/bin/xpinfo, \
+        		/usr/sbin/ioscan, \
+                        /etc/rc.d/init.d/rubrikagents start, \
+                        /etc/rc.d/init.d/rubrikagents stop, \
+                        /etc/rc.d/init.d/rubrikagents status, \
+                        /etc/rc.d/init.d/rubrikagents restart, \
+                        /usr/bin/gzip -d /var/log/rubrik/*, \
+                        /bin/gzip -d /var/log/rubrik/*, \
+                        /usr/bin/tar -xvf /var/log/rubrik/*, \
+                        /bin/tar -xvf /var/log/rubrik/*, \
+                        sudoedit /var/log/rubrik/agent*, \
+                        sudoedit /var/log/rubrik/bootstrap*, \
+                        sudoedit /var/log/rubrik/agent.log, \
+                        sudoedit /var/log/rubrik/bootstrap.log
+
+IBM_TSM_BAU  TSM_HOSTS = IBM_TSM_C_BAU_CMDS, IBM_ALL_NEG
+
+
+# Begin   Global TSM standard template Ver 1.6.9  Date 2015-10-06 * Maintenance * Refer NA15307046 Begin #
+# Description
+# Software products and versions  if required ( ie may have 2 groups one support linux #the other AIX for example)
+# Supported OS platforms  If required see above
+# local functional ID  If required  ie if different than the master
+# local path changes  If required  ie if different than the master
+# local OS groups for * Maintenance *  template
+# self serve access permitted for groups ABC, DEF and MNO only
+
+#---------------[ TSM change window section ]------------------#
+
+#  Reminder:  This sudo entry includes smit/smitty on AIX.
+#
+#  For sudo 1.7.0 and up, include the following entries in the 
+#  /etc/sudo.env file:
+#  SMIT_SHELL=n
+#  SMIT_SEMI_COLON=n
+#  SMIT_QUOTE=n
+#  
+#  and define sudo environment file within /etc/sudoers (or included file) via: 
+#
+#  Defaults env_file=/etc/sudo.env  # Includes the sudo environment file 
+
+Cmnd_Alias IBM_TSM_C_ADM_CMDS =\
+			/usr/bin/smitty cl_admin, \
+			/usr/bin/smitty device, \
+			/usr/bin/smitty install_latest, \
+			/usr/bin/smitty lvm, \
+			/usr/bin/smitty problem, \
+			/usr/bin/smitty storage, \
+			/usr/bin/smitty update_all, \
+			/usr/sbin/chitab, \
+			/usr/sbin/mkitab, \
+			/usr/sbin/rmitab, \
+			/usr/sbin/rmdev
+
+
+IBM_TSM_ADM TSM_HOSTS = IBM_TSM_C_ADM_CMDS
+
+
+# End   Global TSM standard template Ver 1.6.9  Date 2015-10-06 * Maintenance * Refer NA15307046 End #
+
+
+# End   Global TSM standard template Ver 1.6.9  Date 2015-10-06 * Master * Refer NA15307046 End #
+

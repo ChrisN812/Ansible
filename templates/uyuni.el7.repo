@@ -1,0 +1,9 @@
+[uyuni:rhel7-x86_64]
+name=rhel7-x86_64
+enabled=1
+gpgkey=https://vatsmt01.beaconhealthoptions.com/pub/carelon-gpg-pubkey-7A168AC7.key file:///etc/pki/rpm-gpg/mgr-gpg-pub.key
+baseurl=https://vatsmt01.beaconhealthoptions.com:443/rhn/manager/download/rhel7-x86_64
+susemanager_token=eyJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MDk2NjU4OTIsImlhdCI6MTY3ODEyOTg5MiwibmJmIjoxNjc4MTI5NzcyLCJqdGkiOiJycWRDQzVIUk9NTlU3VXp2eUR1XzB3Iiwib3JnIjoxLCJvbmx5Q2hhbm5lbHMiOlsicmhlbDcteDg2XzY0Il19.ry80KXFprwcPYnThXKXCp1ZPlfEzHim9fK6SVvQV6TY
+gpgcheck=0
+repo_gpgcheck=0
+type=rpm-md
