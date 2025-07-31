@@ -1,0 +1,170 @@
+- name: "Configure Automatic Software Scans on UNIX/Linux endpoints"
+  lineinfile:
+    path: "{{ lmt_scanner_path_unix }}/config/setup_config.ini"
+    regexp: "^\\s*SW_SCAN_SCHEDULE_ENABLED.*$"
+    line: "SW_SCAN_SCHEDULE_ENABLED={{ 'TRUE' if lmt_scanner_software_scans_enabled else 'FALSE' }}"
+
+- name: "Set {{ lmt_scanner_software_scans_frequency }} Software Scans on UNIX/Linux endpoints"
+  lineinfile:
+    path: "{{ lmt_scanner_path_unix }}/config/setup_config.ini"
+    regexp: "^\\s*SW_SCAN_FREQUENCY.*$"
+    line: "SW_SCAN_FREQUENCY={{ lmt_scanner_software_scans_frequency }}"
+  when: lmt_scanner_software_scans_enabled
+
+- name: "Configure optional software scan day of week on UNIX/Linux endpoints"
+  lineinfile:
+    path: "{{ lmt_scanner_path_unix }}/config/setup_config.ini"
+    regexp: "^\\s*SW_SCAN_DAY_OF_WEEK.*$"
+    line: "SW_SCAN_DAY_OF_WEEK={{ lmt_scanner_software_scan_day_of_week if ( lmt_scanner_software_scan_day_of_week is defined ) else '' }}"
+
+- name: "Configure optional software scan local time on UNIX/Linux endpoints"
+  lineinfile:
+    path: "{{ lmt_scanner_path_unix }}/config/setup_config.ini"
+    regexp: "^\\s*SW_SCAN_LOCAL_TIME.*$"
+    line: "SW_SCAN_LOCAL_TIME={{ lmt_scanner_software_scan_local_time if ( lmt_scanner_software_scan_local_time is defined ) else '' }}"
+
+- name: "Configure CPU threshold percentage on UNIX/Linux endpoints"
+  lineinfile:
+    path: "{{ lmt_scanner_path_unix }}/config/setup_config.ini"
+    regexp: "^\\s*SW_SCAN_CPU_THRESHOLD_PERCENTAGE.*$"
+    line: "SW_SCAN_CPU_THRESHOLD_PERCENTAGE={{ lmt_scanner_software_scan_cpu_threshold_percentage if ( lmt_scanner_software_scan_cpu_threshold_percentage is defined ) else '' }}"
+
+- name: "Configure scheduled pack results on UNIX/Linux endpoints"
+  lineinfile:
+    path: "{{ lmt_scanner_path_unix }}/config/setup_config.ini"
+    regexp: "^\\s*DAILY_PACK_RESULTS_CREATION_ENABLED.*$"
+    line: "DAILY_PACK_RESULTS_CREATION_ENABLED={{ 'TRUE' if lmt_scanner_daily_pack_results_enabled else 'FALSE' }}"
+
+- name: "Configure scanner output path on UNIX/Linux endpoints"
+  lineinfile:
+    path: "{{ lmt_scanner_path_unix }}/config/setup_config.ini"
+    regexp: "^\\s*PACKAGE_OUTPUT_DIR.*$"
+    line: "PACKAGE_OUTPUT_DIR={{ lmt_scanner_output_path_unix if ( lmt_scanner_output_path_unix is defined ) else './output' }}"
+
+- name: "Configure optional public cloud type on UNIX/Linux endpoints"
+  lineinfile:
+    path: "{{ lmt_scanner_path_unix }}/config/setup_config.ini"
+    regexp: "^\\s*PUBLIC_CLOUD_TYPE.*$"
+    line: "PUBLIC_CLOUD_TYPE=\"{{ lmt_scanner_public_cloud_type if ( lmt_scanner_public_cloud_type is defined ) else '' }}\""
+
+- name: "Configure Capacity Scan on Virtualization Hosts Settings on Linux endpoints"
+  block:
+    - name: "Configure Capacity Scan on Virtualization Hosts on Linux endpoints"
+      lineinfile:
+        path: "{{ lmt_scanner_path_unix }}/config/setup_config.ini"
+        regexp: "^\\s*VIRTUALIZATION_HOST_SCAN_ENABLED.*$"
+        line: "VIRTUALIZATION_HOST_SCAN_ENABLED={{ 'TRUE' if lmt_scanner_virt_host_scan_enabled else 'FALSE' }}"
+
+    - name: "Configure Host Hostname Collection on Linux endpoints"
+      lineinfile:
+        path: "{{ lmt_scanner_path_unix }}/config/setup_config.ini"
+        regexp: "^\\s*COLLECT_HOST_HOSTNAME.*$"
+        line: "COLLECT_HOST_HOSTNAME={{ 'TRUE' if lmt_scanner_collect_host_hostname else 'FALSE' }}"
+        
+    - name: "Configure Docker Scan Enabled on Linux endpoints"
+      lineinfile:
+        path: "{{ lmt_scanner_path_unix }}/config/setup_config.ini"
+        regexp: "^\\s*DOCKER_SCAN_ENABLED.*$"
+        line: "DOCKER_SCAN_ENABLED={{ 'TRUE' if lmt_scanner_docker_scan_enabled else 'FALSE' }}"
+  when: (ansible_facts['os_family'] == 'RedHat' or
+        ansible_facts['os_family'] == 'Suse' or
+        ansible_facts['os_family'] == 'Debian')
+
+- name: "Change config on System z platform to fail scanner configuration in case of missing required hardware information."
+  lineinfile:
+    path: "{{ lmt_scanner_path_unix }}/config/setup_config.ini"
+    regexp: "^\\s*FAIL_ON_MISSING_CAPACITY_SCAN.*$"
+    insertafter: EOF
+    line: "FAIL_ON_MISSING_CAPACITY_SCAN={%if (lmt_scanner_zlinux_machine_type is defined and \
+            lmt_scanner_zlinux_processor_type is defined and \
+            lmt_scanner_zlinux_shared_pool_capacity is defined and \
+            lmt_scanner_zlinux_system_active_processors is defined)%}FALSE{% else %}TRUE{%endif%}"
+  when: ('s390' in ansible_facts['architecture'])
+
+- name: "Run scanner setup script block on UNIX/Linux endpoints"
+  block:
+    - name: "Run scanner setup script on Solaris endpoints"
+      shell: "export DSD_MODE={{ 'yes' if lmt_scanner_solaris_dsd_mode else 'no' }}; ./setup.sh"
+      args:
+        chdir: "{{ lmt_scanner_path_unix }}"
+      async: "{{ lmt_scanner_setup_timeout }}"
+      poll: 5
+      when: ansible_facts['os_family'] == 'Solaris'
+
+    - name: "Run scanner setup script on System z Linux endpoints with custom configuration"
+      shell: "export TLM_MACHINETYPE={{ lmt_scanner_zlinux_machine_type }}; \
+              export TLM_PROCESSORTYPE={{ lmt_scanner_zlinux_processor_type }}; \
+              export TLM_SHAREDPOOLCAPACITY={{ lmt_scanner_zlinux_shared_pool_capacity }}; \
+              export TLM_SYSTEMACTIVEPROCESSORS={{ lmt_scanner_zlinux_system_active_processors }}; \
+              ./setup.sh"
+      args:
+        chdir: "{{ lmt_scanner_path_unix }}"
+      async: "{{ lmt_scanner_setup_timeout }}"
+      poll: 5
+      when: ansible_facts['os_family'] != 'Solaris' and
+            's390' in ansible_facts['architecture'] and
+            lmt_scanner_zlinux_machine_type is defined and
+            lmt_scanner_zlinux_processor_type is defined and
+            lmt_scanner_zlinux_shared_pool_capacity is defined and
+            lmt_scanner_zlinux_system_active_processors is defined
+
+    - name: "Run scanner setup script on UNIX/Linux endpoints"
+      command: "./setup.sh"
+      args:
+        chdir: "{{ lmt_scanner_path_unix }}"
+      async: "{{ lmt_scanner_setup_timeout }}"
+      poll: 5
+      when: ansible_facts['os_family'] != 'Solaris' and
+        ('s390' not in ansible_facts['architecture'] or
+        lmt_scanner_zlinux_machine_type is not defined or
+        lmt_scanner_zlinux_processor_type is not defined or
+        lmt_scanner_zlinux_shared_pool_capacity is not defined or
+        lmt_scanner_zlinux_system_active_processors is not defined)
+  when: not (only_configure | default(false))
+
+- name: "Run configure scanner block on UNIX/Linux endpoints"
+  block:
+    - name: "Run configure scanner script on Solaris endpoints"
+      shell: "export DSD_MODE={{ 'yes' if lmt_scanner_solaris_dsd_mode else 'no' }}; ./configure.sh"
+      args:
+        chdir: "{{ lmt_scanner_path_unix }}/automation"
+      async: "{{ lmt_scanner_setup_timeout }}"
+      poll: 5
+      when: ansible_facts['os_family'] == 'Solaris'
+
+    - name: "Run configure scanner script on System z Linux endpoints with custom configuration"
+      shell: "export TLM_MACHINETYPE={{ lmt_scanner_zlinux_machine_type }}; \
+              export TLM_PROCESSORTYPE={{ lmt_scanner_zlinux_processor_type }}; \
+              export TLM_SHAREDPOOLCAPACITY={{ lmt_scanner_zlinux_shared_pool_capacity }}; \
+              export TLM_SYSTEMACTIVEPROCESSORS={{ lmt_scanner_zlinux_system_active_processors }}; \
+              ./configure.sh"
+      args:
+        chdir: "{{ lmt_scanner_path_unix }}/automation"
+      async: "{{ lmt_scanner_setup_timeout }}"
+      poll: 5
+      when: ansible_facts['os_family'] != 'Solaris' and
+            's390' in ansible_facts['architecture'] and
+            lmt_scanner_zlinux_machine_type is defined and
+            lmt_scanner_zlinux_processor_type is defined and
+            lmt_scanner_zlinux_shared_pool_capacity is defined and
+            lmt_scanner_zlinux_system_active_processors is defined
+
+    - name: "Run configure scanner script on UNIX/Linux endpoints"
+      command: "./configure.sh"
+      args:
+        chdir: "{{ lmt_scanner_path_unix }}/automation"
+      async: "{{ lmt_scanner_setup_timeout }}"
+      poll: 5
+      when: ansible_facts['os_family'] != 'Solaris' and
+        ('s390' not in ansible_facts['architecture'] or
+        lmt_scanner_zlinux_machine_type is not defined or
+        lmt_scanner_zlinux_processor_type is not defined or
+        lmt_scanner_zlinux_shared_pool_capacity is not defined or
+        lmt_scanner_zlinux_system_active_processors is not defined)
+  when: (only_configure | default(false))
+
+- name: "Check if endpoint_id.txt file exists on UNIX/Linux endpoints"
+  stat:
+    path: "{{ lmt_scanner_path_unix }}/config/endpoint_id.txt"
+  register: ilmt_install_fail_msg
+  failed_when: not ilmt_install_fail_msg.stat.exists

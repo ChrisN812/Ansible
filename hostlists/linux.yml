@@ -1,0 +1,295 @@
+---
+all:
+  children:
+    sandbox:
+      hosts:
+        vadunixadm02:
+        vadunixadm03:
+          tags:
+            - lmt_server
+
+    dev:
+      hosts:
+        vadapigee[01:02]el8:
+        vaddataart01:
+        vadgitlab1:
+        vadiddapp[1:2]:
+        vadiddappdb[1:2]:
+        vadiddesb[1:2]:
+        vadiddint[1:2]:
+        vadiddweb[1:2]:
+        vadinfcicd01:
+        vadinfdb20:
+        vadinfdq01:
+        vadinfdqdb01:
+        vadinfdx20:
+        vadinfftp:
+        vadinfilm01:
+        vadinfrt01:
+        vadinfrtdb01:
+        vadmft20:
+        vadmdhdwh:
+        vadnginx[05:06]:
+        vadpselk01:
+        vadunixgraf2:
+        vadunixans01:
+
+    sit:
+      hosts:
+        vasapigee[01:07]el8:
+        vasiddapp[1:2]:
+        vasiddappdb[1:2]:
+        vasiddesb[1:2]:
+        vasiddint[1:2]:
+        vasiddweb[1:2]:
+        vasinfdb20:
+        vasinfdq01:
+        vasinfdqdb01:
+        vasinfdx20:
+        vasinfilm01:
+        vasinfrt01:
+        vasinfrtdb01:
+        vasmft20:
+        vaspselk01:
+
+    uat:
+      hosts:
+        vatapigee[01:14]el8:
+        vatinfdb[20:21]:
+        vatinfdq[01:02]:
+        vatinfdqdb[01:02]:
+        vatinfdx[20:22]:
+        vatinfilm01:
+        vatinfrt[01:03]:
+        vatinfrtdb[01:02]:
+        vatmft[20:21]:
+        vatpowertech:
+        vauiddapp[1:2]:
+        vauiddappdb[1:2]:
+        vauiddesb[1:2]:
+        vauiddint[1:2]:
+        vauiddweb[1:2]:
+
+    uatgfs:
+      hosts:
+        vatinfdx20:
+        vatinfdx21:
+        vatinfdx22:
+        vatinfilm01:
+        vatinfrt01:
+        vatinfrt02:
+        vatinfrt03:
+        vatinfdq01:
+        vatinfdq02:
+
+    prod:
+      hosts:
+        vapapigee[01:14]el8:
+        vapiddjks1:
+        vapiddapp[1:2]:
+        vapiddappdb[1:2]:
+        vapiddesb[1:2]:
+        vapiddint[1:2]:
+        vapiddweb[1:2]:
+        vapinfdb[20:21]:
+        vapinfdq[01:02]:
+        vapinfdqdb[01:02]:
+        vapinfdx[20:22]:
+        vapinfilm01:
+        vapinfrt[01:03]:
+        vapinfrtdb[01:02]:
+        vapmdhdwh:
+          ansible_host: 161.125.246.111
+        vapmft[20:21]:
+        vapsplk[01:02]:
+        vapsmtp[01:02]:
+        vapnginx[01:02]:
+        vappselk01:
+        vapptav01:
+        vapptavsho01:
+        vapnicecon01:
+          ansible_host: 161.125.244.144
+        vapnicecon02:
+          ansible_host: 161.125.244.145
+
+    prodgfs:
+      hosts:
+        vapinfdx[20:22]:
+        vapinfilm01:
+        vapinfdq[01:02]:
+        vapinfrt[01:03]:
+
+    dr:
+      hosts:
+        vadrapigee[01:14]el8:
+        vlvdrinfdb[22:23]:
+        vlvdrinfdqdb[01:02]:
+        vlvdrinfrtdb[01:02]:
+        vlpsmtp[01:02]:
+        vlvpsplk[01:02]:
+        vlvnginx[03:04]:
+        vlpiddappdb1:
+          ansible_host: 10.200.90.68
+        vlvpinfveeam:
+
+    idddev:
+      hosts:
+        vadiddweb[1:2]:
+        vadiddesb[1:2]:
+        vadiddapp[1:2]:
+        vadiddint[1:2]:
+        vadiddappdb[1:2]:
+
+    iddsit:
+      hosts:
+        vasiddweb[1:2]:
+        vasiddesb[1:2]:
+        vasiddapp[1:2]:
+        vasiddint[1:2]:
+        vasiddappdb[1:2]:
+
+    idduat:
+      hosts:
+        vauiddweb[1:2]:
+        vauiddesb[1:2]:
+        vauiddapp[1:2]:
+        vauiddint[1:2]:
+        vauiddappdb[1:2]:
+
+    iddprd:
+      hosts:
+        vapiddweb[1:2]:
+        vapiddesb[1:2]:
+        vapiddapp[1:2]:
+        vapiddint[1:2]:
+        vapiddappdb[1:2]:
+        vlpiddappdb1:
+
+    elk:
+      hosts:
+        vadpselk01el8:
+          ansible_host: 161.125.246.28
+        vaspselk01el8:
+          ansible_host: 161.125.246.24
+        vappselk01el8:
+          ansible_host: 161.125.248.109
+
+    vox:
+      hosts:
+        vapvoxmgt01:
+        vapvoxrtr01:
+        vlpvoxmgt01:
+        vlpvoxrtr01:
+
+    exadev:
+      hosts:
+        vadexa01db01:
+        vadexa01db02:
+        vldexa01db01:
+        vldexa01db02:
+
+    exaprod:
+      hosts:
+        vapexa01db01:
+        vapexa01db02:
+        vlpexa01db01:
+        vlpexa01db02:
+
+    exadata:
+      children:
+        exadev:
+        exaprod:
+
+    odadev:
+      hosts:
+        vadodan2:
+        vldodan2:
+
+    odaprod:
+      hosts:
+        vapodan1:
+        vlpodan1:
+
+    oda:
+      children:
+        odadev:
+        odaprod:
+
+    oem:
+      hosts:
+        vapoem01:
+        vlpoem01:
+
+    md:
+      hosts:
+        vapmd01:
+        vlpmd01:
+
+    mosdev:
+      hosts:
+        vadfedinfmft[20:21]:
+        vadfedinfdx[20:21]:
+        vadfedinfdb[20:21]:
+        vlvdfedinfdb[22:23]:
+
+    mosdevwave1:
+      hosts:
+        vadfedinfmft20:
+        vadfedinfdx20:
+        vadfedinfdb20:
+        vlvdfedinfdb22:
+
+    mosdevwave2:
+      hosts:
+        vadfedinfmft21:
+        vadfedinfdx21:
+        vadfedinfdb21:
+        vlvdfedinfdb23:
+
+    mosprod:
+      hosts:
+        vapfedinfmft[20:21]:
+        vapfedinfdx[20:21]:
+        vapfedinfdb[20:21]:
+
+    mosdr:
+      hosts:
+        vlvdrfedinfdb22:
+        vlvdrfedinfdb23:
+
+    mosprdwave1:
+      hosts:
+        vapfedinfmft20:
+        vapfedinfdx20:
+        vapfedinfdb20:
+        vlvdrfedinfdb22:
+
+    mosprdwave2:
+      hosts:
+        vapfedinfmft21:
+        vapfedinfdx21:
+        vapfedinfdb21:
+        vlvdrfedinfdb23:
+
+    roster:
+      hosts:
+        vadrosterapp01:
+        vadrosterapp02:
+        vadrosterapp03:
+        vadrosterapp04:
+        vatrosterapp01:
+        vatrosterapp02:
+        vatrosterapp03:
+        vatrosterapp04:
+        vaprosterapp01:
+        vaprosterapp02:
+        vaprosterapp03:
+        vaprosterapp04:
+
+  vars:
+    ansible_user: "ca_cnadmin"
+    ansible_become_password: "tou9QJt-N#6n-4X-zjiQ"
+    ansible_ssh_password: "tou9QJt-N#6n-4X-zjiQ"
+#    ansible_user: "ansible"
+#    ansible_become_password: "Cr1nUnix5ysAdmin"
+#    ansible_ssh_password: "Cr1nUnix5ysAdmin"

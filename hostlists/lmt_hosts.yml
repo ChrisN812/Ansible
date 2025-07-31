@@ -1,0 +1,116 @@
+---
+all:
+  children:
+    linux:
+      hosts:
+        lmt_server:
+          ansible_host: vadunixadm03
+        vadunixadm02:
+        vadunixadm03:
+        vadunixgraf2:
+        vadunixans01:
+
+    aix:
+      hosts:
+        #TEST
+        test1:
+        test2:
+        test3:
+
+        #DEV
+        essbasedev:
+        httpwas4stg:
+        httpwas5stg:
+        orw3:
+        opal:
+        vodwhdev:
+        nim:
+
+        #STAGE
+        admin:
+        httpwas1stg:
+        httpwas2stg:
+        was1stg:
+        was2stg:
+        httpwas1ve:
+        was1ve:
+        http1ve:
+        nd1trnstg:
+
+        #TRAIN
+        httpwas1trn:
+        httpwas2trn:
+        db1demo:
+        ond1demo:
+        httpwas1demo:
+
+        #DATAWAREHOUSE
+        natldwh:
+        vadmbhpdw1:
+        vapmbhpdw1:
+
+    vars:
+      ansible_python_interpreter: LIBPATH='' /opt/freeware/bin/python3
+
+    moslvdev:
+      hosts:
+        mos2http1dev:
+        mos2http2dev:
+        mos2was1dev:
+        mos2was2dev:
+        mos2ondemanddev:
+        mos2jbossdev:
+        mos2ldapdev:
+
+    mosashdev:
+      hosts:
+        moshttp1dev:
+        moshttp2dev:
+        moswas1dev:
+        moswas2dev:
+        mosondemanddev:
+        mosjbossdev:
+        mosldapdev:
+
+    moslvprod:
+      hosts:
+        mos2http1inter:
+        mos2http2inter:
+        mos2http1prod:
+        mos2http2prod:
+        mos2was1prod:
+        mos2was2prod:
+        mos2was3prod:
+        mos2was4prod:
+        mos2was5prod:
+        mos2nd1prod:
+        mos2ondemand:
+        mos2tsm:
+        mos2nim:
+        mos2jboss:
+        mos2ldap:
+        vlfedsklm:
+
+    mosashprod:
+      hosts:
+        moshttp1inter:
+        moshttp2inter:
+        moshttp1prod:
+        moshttp2prod:
+        moswas1prod:
+        moswas2prod:
+        moswas3prod:
+        moswas4prod:
+        moswas5prod:
+        mosnd1prod:
+        mosondemand:
+        mostsm:
+        mosnim:
+        mosjboss:
+        mosldap:
+        vafedsklm:
+
+  vars:
+    ansible_user: "ca_cnadmin"
+    ansible_become_password: "fhsPrl8RfR1P3$#KE0lc"
+    ansible_ssh_password: "fhsPrl8RfR1P3$#KE0lc"

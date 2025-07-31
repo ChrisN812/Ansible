@@ -1,0 +1,105 @@
+---
+all:
+  children:
+    linux:
+      hosts:
+        vadunixadm03:
+          tags:
+            - lmt_server
+
+    test:
+      hosts:
+        test1:
+        test2:
+        test3:
+
+    stage:
+      hosts:
+        admin:
+        httpwas1stg:
+        httpwas2stg:
+        was1stg:
+        was2stg:
+        httpwas1ve:
+        was1ve:
+        http1ve:
+        nd1trnstg:
+
+    dev:
+      hosts:
+        essbasedev:
+        httpwas4stg:
+        httpwas5stg:
+        orw3:
+        opal:
+        vodwhdev:
+        nim:
+
+    train:
+      hosts:
+        httpwas1trn:
+        httpwas2trn:
+        db1demo:
+        ond1demo:
+        httpwas1demo:
+
+    prod:
+      hosts:
+        http1inter:
+        http2inter:
+        http3inter:
+        http4inter:
+        http1prod:
+        http2prod:
+        http3prod:
+        http4prod:
+        was1prod:
+        was3prod:
+        was4prod:
+        was5prod:
+        was6prod:
+        was7prod:
+        was8prod:
+        was9prod:
+        was10prod:
+        was11prod:
+        nd1prod:
+        orw1:
+        orw2:
+        tsmprod:
+        ebsprod:
+        hypprod:
+        essbaseprod:
+
+    dr:
+      hosts:
+        amberdr:
+        http1dr:
+        http1interdr:
+        http2dr:
+        http2interdr:
+        http3dr:
+        http3interdr:
+        http4dr:
+        http4interdr:
+        nd1dr:
+        nimdr:
+        was10dr:
+        was11dr:
+        was1dr:
+        was3dr:
+        was4dr:
+        was5dr:
+        was6dr:
+        was7dr:
+        was8dr:
+        was9dr:
+
+    datawarehouse:
+      hosts:
+        natldwh:
+        vadmbhpdw1:
+        vapmbhpdw1:
+
+  vars:
+    ansible_python_interpreter: LIBPATH='' /opt/freeware/bin/python3
